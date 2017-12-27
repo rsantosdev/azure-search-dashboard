@@ -1,4 +1,5 @@
 ﻿using AzureSearchDashboard.Configuration;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,7 @@ namespace AzureSearchDashboard
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureSearchClient(Configuration);
+            services.ConfigureAuthentication(Configuration);
             services.AddMvc();
         }
 
@@ -36,6 +38,8 @@ namespace AzureSearchDashboard
             }
 
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Search;
-using Microsoft.Azure.Search.Models;
 
 namespace AzureSearchDashboard.Controllers.Api
 {
-    [Route("api/index")]
+    [Route("api/index"), Authorize]
     public class IndexController : Controller
     {
         private readonly ISearchServiceClient _client;
