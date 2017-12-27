@@ -261,4 +261,4 @@ __pycache__/
 *.pyc
 
 # Configuration files
-*.Development.json
+appsettings.Development.json
