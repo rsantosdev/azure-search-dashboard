@@ -47,7 +47,7 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               TAG=$(date +%Y%m%dT%H%M)-${CIRCLE_SHA1:0:7}
               echo "Production: ${TAG}"
-              docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+              docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASSWORD
               docker tag azure-search-dashboard rsantosdev/azure-search-dashboard:latest
               docker tag azure-search-dashboard rsantosdev/azure-search-dashboard:$TAG
               docker push rsantosdev/azure-search-dashboard
