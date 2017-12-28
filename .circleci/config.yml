@@ -1,0 +1,54 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: microsoft/aspnetcore-build:2
+    environment:
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          key: azure-search-dash-{{ .Branch }}-{{ checksum "AzureSearchDashboard/AzureSearchDashboard.csproj" }}
+      - run:
+          name: Dependencies
+          command: dotnet restore -s https://api.nuget.org/v3/index.json
+      - run:
+          name: Build
+          command: dotnet build
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.04.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
+      - run:
+          name: Publish
+          command: dotnet publish -c Release
+      - run:
+          name: Docker Package
+          command: docker build -t azure-search-dashboard .
+      - run:
+          name: List After
+          command: ls -la
+      - save_cache:
+          key: azure-search-dash-{{ .Branch }}-{{ checksum "AzureSearchDashboard/AzureSearchDashboard.csproj" }}
+          paths:
+          - ~/.nuget
+      - store_artifacts:
+          path: AzureSearchDashboard/bin/Release/netcoreapp2.0/publish/
+      - deploy:
+          name: Deploy (Production)
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              TAG=$(date +%Y%m%dT%H%M)-${CIRCLE_SHA1:0:7}
+              echo "Production: ${TAG}"
+              docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+              docker tag azure-search-dashboard rsantosdev/azure-search-dashboard:latest
+              docker tag azure-search-dashboard rsantosdev/azure-search-dashboard:$TAG
+              docker push rsantosdev/azure-search-dashboard
+            fi
