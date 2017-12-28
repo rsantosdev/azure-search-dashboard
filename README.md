@@ -4,7 +4,7 @@ A custom dashboard to search across azure search indexes.
 Build Status: ![Build Status](https://circleci.com/gh/rsantosdev/azure-search-dashboard/tree/master.svg?style=shield&circle-token=5702a2351b869e44622ff04dfabfefd158ee55e6)
 
 ### Links
-* Docker Image: https://hub.docker.com/r/rsantosdev/
+* Docker Image: https://hub.docker.com/r/rsantosdev/azure-search-dashboard/
 * Live sample: http://azure-search-dashboard.azurewebsites.net/
 
   username: demo / password: azure
