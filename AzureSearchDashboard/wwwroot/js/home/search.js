@@ -41,7 +41,7 @@
 
             function queryIndex() {
                 if (self.searchQuery && self.searchQuery.length) {
-                    $http.get('/api/index/' + self.selectedIndex + '/search?query=' + self.searchQuery)
+                    $http.get('/api/index/' + self.selectedIndex + '/search?query=' + self.searchQuery + '&orderBy=Date%20desc')
                         .then(function (result) {
                             self.data = result.data;
                         });
